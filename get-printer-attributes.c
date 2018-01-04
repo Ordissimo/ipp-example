@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <cups/cups.h>
-#include <cups/http.h>
 
 /*
  * Types...
@@ -61,12 +60,41 @@ void debug(_cups_vars_t vars) /* I - Variables */
 static int				/* 0 = success, 1 = failure */
 do_tests(_cups_vars_t *vars)		/* I - Variables */
 {
-  http_t	*http = NULL;       /* HTTP connection to server */
+  http_t	*http = NULL;             /* HTTP connection to server */
+  ipp_t *request, *response = NULL; /* IPP request and response */
+  ipp_attribute_t *attr;            /* IPP attributes */
+  char buffer[1024];                /* Buffer for IPP attributes */
+
+  /* Try to connect to IPP server */
   if ((http = httpConnect2(vars->hostname, vars->port, NULL, vars->family,
                            vars->encryption, 1, 30000, NULL)) == NULL) {
     printf("Unable to connect to %s on port %d.\n", vars->hostname, vars->port);
     return 1;
   }
+
+  /* Fire a Get-Printer-Attributes request */
+  request = ippNewRequest(IPP_OP_GET_PRINTER_ATTRIBUTES);
+  ippAddString(request, IPP_TAG_OPERATION, IPP_TAG_URI, "printer-uri",
+	             NULL, vars->uri);
+  response = cupsDoRequest(http, request, vars->resource);
+
+  /* Print the attributes received from the IPP printer */
+  attr = ippFirstAttribute(response);
+  while (attr) {
+    /* Ponvert IPP attribute's value to string */
+    ippAttributeString(attr, buffer, sizeof(buffer));
+    
+    /*
+     * Print the attribute and value in the format
+     * attr = value
+     */
+    printf("%s = %s\n", ippGetName(attr), buffer);
+
+    /* next attribute */
+    attr = ippNextAttribute(response);
+  }
+
+  fprintf(stderr, "\nOperation Get-Printer-Attributes successful. Exiting!\n");
   return 0;
 }
 
