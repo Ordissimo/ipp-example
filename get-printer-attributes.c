@@ -28,7 +28,6 @@ typedef struct _cups_vars_s		/**** Set of variables ****/
   http_encryption_t encryption;		/* Encryption for connection? */
   double	timeout;		/* Timeout for connection */
   int		family;			/* Address family */
-  cups_array_t	*vars;			/* Array of variables */
 } _cups_vars_t;
 
 /**
