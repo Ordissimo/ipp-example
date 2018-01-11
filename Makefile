@@ -9,15 +9,12 @@ CFLAGS = -g -Wall
 LDLIBS = -lcups
 
 # targets to build
-TARGET = get-printer-attributes
+TARGETS = get-printer-attributes print-job
 
-all: $(TARGET)
-
-$(TARGET): $(TARGET).c
-	$(CC) $(CFLAGS) -o $(TARGET) $(TARGET).c $(LDLIBS)
+all: $(TARGETS)
 
 .PHONY: clean
 
 # clean executables
 clean:
-	$(RM) $(TARGET)
+	$(RM) $(TARGETS)

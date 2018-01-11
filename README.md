@@ -6,6 +6,8 @@ This repository contains sample code which makes use of [CUPS][1] API to work/te
 
 - `get-printer-attributes.c`: Every IPP printer/server has some attributes which a user/client can see using an IPP request(very similar to an HTTP GET request). For instance, if the name of my printer is **"My cool printer"**, there will be an attribute in the request with the name `printer-name` having value `My cool printer`.<br><br>To test this, you either need an IPP supported printer, or you can simulate a printer using the command `ippserver "My cool printer"`. This command makes use of the [`ippserver`][2] program.
 
+- `print-job.c`: As the name suggests, send a print job to an IPP printer.
+
 ## Compilation Instructions
 
 You need `libcups2-dev` installed for the CUPS API. You can install it using `sudo apt install libcups2-dev` on linux systems. Then run:
